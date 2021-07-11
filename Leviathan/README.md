@@ -16,88 +16,127 @@ leviathan0
 
 ## Level 0 -> Level 1
 
-Lets explore the `/home/` directory:
+Looking at the `.dot` files, there is a hidden directory called `.backup` in the `/leviathan0/` directory.
 
-```bash
-leviathan0@leviathan:/home$ ls -lR
-.:
-total 32
-drwxr-xr-x 3 root root 4096 Aug 26  2019 leviathan0
-drwxr-xr-x 2 root root 4096 Aug 26  2019 leviathan1
-drwxr-xr-x 2 root root 4096 Aug 26  2019 leviathan2
-drwxr-xr-x 2 root root 4096 Aug 26  2019 leviathan3
-drwxr-xr-x 3 root root 4096 Aug 26  2019 leviathan4
-drwxr-xr-x 2 root root 4096 Aug 26  2019 leviathan5
-drwxr-xr-x 2 root root 4096 Aug 26  2019 leviathan6
-drwxr-xr-x 2 root root 4096 Aug 26  2019 leviathan7
+In it, is a `bookmarks.html` files, which had a list of a bunch of links to interesting websites.
 
-./leviathan0:
-total 0
+I tried to download it with `scp` to view the HTML file locally, but it didn't work. So I opened the file with `cat`, and did a mass copy / past of it to view it locally. This step probably could have been done a lot better because it's a pretty big file to manually copy over.
 
-./leviathan1:
-total 8
--r-sr-x--- 1 leviathan2 leviathan1 7452 Aug 26  2019 check
+So I key search `password` and find a link to "password for leviathan1", which gives me the password below. 
 
-./leviathan2:
-total 8
--r-sr-x--- 1 leviathan3 leviathan2 7436 Aug 26  2019 printfile
+And now that I think about it, I could have searched for the password locally using a tool like `grep` or a file reader with word search functionality. But I found the password anyways! And that's what matters.
 
-./leviathan3:
-total 12
--r-sr-x--- 1 leviathan4 leviathan3 10288 Aug 26  2019 level3
+**Level 1 Password**
 
-./leviathan4:
-total 0
-
-./leviathan5:
-total 8
--r-sr-x--- 1 leviathan6 leviathan5 7560 Aug 26  2019 leviathan5
-
-./leviathan6:
-total 8
--r-sr-x--- 1 leviathan7 leviathan6 7452 Aug 26  2019 leviathan6
-
-./leviathan7:
-total 4
--r--r----- 1 leviathan7 leviathan7 178 Aug 26  2019 CONGRATULATIONS
+```
+rioGegei8m
 ```
 
-So there is nothing in the `/home/` directory for `leviathan0` to access.
+## Level 1 -> Level 2
 
-So lets explore the root directory I guess:
+* in the directory is a file called `check`
+* it appears to be some sort of executable:
 
 ```bash
-leviathan0@leviathan:/$ ls -l
-total 308
-drwxr-xr-x   2 root root   4096 Oct 16  2018 bin
-drwxr-xr-x   4 root root   4096 Oct 16  2018 boot
-dr-xr-xr-x   3 root root      0 May  6  2020 cgroup2
-drwxr-xr-x  14 root root   4500 May 12 16:13 dev
-drwxr-xr-x  88 root root   4096 Aug 26  2019 etc
-drwxr-xr-x  10 root root   4096 Aug 26  2019 home
-lrwxrwxrwx   1 root root     29 Oct 16  2018 initrd.img -> boot/initrd.img-4.9.0-6-amd64
-lrwxrwxrwx   1 root root     29 Oct 16  2018 initrd.img.old -> boot/initrd.img-4.9.0-6-amd64
-drwxr-xr-x  16 root root   4096 Aug 26  2019 lib
-drwxr-xr-x   2 root root   4096 Aug 26  2019 lib32
-drwxr-xr-x   2 root root   4096 Oct 16  2018 lib64
-drwxr-xr-x   2 root root   4096 Aug 26  2019 libx32
-drwx------   2 root root  16384 Oct 16  2018 lost+found
-drwxr-xr-x   3 root root   4096 Oct 16  2018 media
-drwxr-xr-x   2 root root   4096 Oct 16  2018 mnt
-drwxr-xr-x   2 root root   4096 Oct 16  2018 opt
-dr-xr-xr-x 169 root root      0 May  4  2020 proc
-lrwxrwxrwx   1 root root      9 Aug 26  2019 README.txt -> /etc/motd
-drwx------   7 root root   4096 Aug 31  2020 root
-drwxr-xr-x  15 root root    580 Jul 11 21:56 run
-drwxr-xr-x   2 root root   4096 Aug 26  2019 sbin
-drwxr-xr-x   3 root root   4096 Aug 26  2019 share
-drwxr-xr-x   2 root root   4096 Oct 16  2018 srv
-dr-xr-xr-x  12 root root      0 May  5  2020 sys
-drwxrws-wt 182 root root 225280 Jul 11 21:58 tmp
-drwxr-xr-x  12 root root   4096 Aug 26  2019 usr
-drwxr-xr-x  11 root root   4096 Aug 26  2019 var
-lrwxrwxrwx   1 root root     26 Oct 16  2018 vmlinuz -> boot/vmlinuz-4.9.0-6-amd64
-lrwxrwxrwx   1 root root     26 Oct 16  2018 vmlinuz.old -> boot/vmlinuz-4.9.0-6-amd64
+check: setuid ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=c735f6f3a3a94adcad8407cc0fda40496fd765dd, not stripped
 ```
 
-Nothing too promising here either. 
+I feel like this involves exploring the executable file somehow. I have a feeling that the password might be hard-coded into the file and I need to find it. This is what the strings of the executable look like, but so far I am not having much luck finding a string that looks like a password. I see a reference to `strcmp`, but no password variable associated with it. Here are the file's strings:
+
+```bash
+leviathan1@leviathan:~$ strings check
+/lib/ld-linux.so.2
+libc.so.6
+_IO_stdin_used
+puts
+setreuid
+printf
+getchar
+system
+geteuid
+strcmp
+__libc_start_main
+__gmon_start__
+GLIBC_2.0
+PTRhp
+QVh;
+secrf
+love
+UWVS
+t$,U
+[^_]
+password:
+/bin/sh
+Wrong password, Good Bye ...
+;*2$"
+GCC: (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+crtstuff.c
+__JCR_LIST__
+deregister_tm_clones
+__do_global_dtors_aux
+completed.6587
+__do_global_dtors_aux_fini_array_entry
+frame_dummy
+__frame_dummy_init_array_entry
+check.c
+__FRAME_END__
+__JCR_END__
+__init_array_end
+_DYNAMIC
+__init_array_start
+__GNU_EH_FRAME_HDR
+_GLOBAL_OFFSET_TABLE_
+__libc_csu_fini
+strcmp@@GLIBC_2.0
+__x86.get_pc_thunk.bx
+printf@@GLIBC_2.0
+getchar@@GLIBC_2.0
+_edata
+geteuid@@GLIBC_2.0
+__data_start
+puts@@GLIBC_2.0
+system@@GLIBC_2.0
+__gmon_start__
+__dso_handle
+_IO_stdin_used
+setreuid@@GLIBC_2.0
+__libc_start_main@@GLIBC_2.0
+__libc_csu_init
+_fp_hw
+__bss_start
+main
+__TMC_END__
+.symtab
+.strtab
+.shstrtab
+.interp
+.note.ABI-tag
+.note.gnu.build-id
+.gnu.hash
+.dynsym
+.dynstr
+.gnu.version
+.gnu.version_r
+.rel.dyn
+.rel.plt
+.init
+.plt.got
+.text
+.fini
+.rodata
+.eh_frame_hdr
+.eh_frame
+.init_array
+.fini_array
+.jcr
+.dynamic
+.got.plt
+.data
+.bss
+.comment
+```
+
+This [StackExchange post](https://unix.stackexchange.com/questions/194521/open-read-unix-executable-file) gives a pretty helpful overview of various commands I can use to explore an executable file.
+
+One thing I can do is use `objdump` to view some of the assembly commands of the executable. However I cannot see any strings in this
+

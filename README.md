@@ -2,10 +2,12 @@
 
 These are some of the notes I have made playing [Wargames](https://overthewire.org/wargames/) from OverTheWire. This is meant to track my progress and review previous steps, not to be a guide for players.
 
+These exercises are a great way to keep up my skills in `bash` and various `Unix` commands.
+
 ## Progress
 
-| Wargame                                                  | Level    |
-| -------------------------------------------------------- | -------- |
-| Bandit                                                   | Level 13 |
-| [Leviathan](https://overthewire.org/wargames/leviathan/) | Level 0  |
+| Wargame                                                  | Current Level        |
+| -------------------------------------------------------- | -------------------- |
+| Bandit                                                   | Level 14 (out of 34) |
+| [Leviathan](https://overthewire.org/wargames/leviathan/) | Level 1 (out of 7)   |
 
