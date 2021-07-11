@@ -6,7 +6,7 @@ Go to Bandit directory in PowerShell. Open the Github folder and type `powershel
 
 PowerShell will be used because it has more features then command prompt. A big missing feature in command prompt is command history, which is especially helpful when commands are repeated, like the `ssh` command with the server address.
 
-It also is optimal because it has less overhead than working in the Linux subsystem. If necessary, I can switch to a subsystem enviornment from PowerShell running the `bash` command. 
+It also is optimal because it has less overhead than working in the Linux subsystem. If necessary, I can switch to a subsystem environment from PowerShell running the `bash` command. 
 
 ## Resources
 

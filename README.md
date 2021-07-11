@@ -4,7 +4,8 @@ These are some of the notes I have made playing [Wargames](https://overthewire.o
 
 ## Progress
 
-| Wargame | Level    |
-| ------- | -------- |
-| Bandit  | Level 13 |
+| Wargame                                                  | Level    |
+| -------------------------------------------------------- | -------- |
+| Bandit                                                   | Level 13 |
+| [Leviathan](https://overthewire.org/wargames/leviathan/) | Level 0  |
 
