@@ -2,6 +2,8 @@
 
 **Note:** Pretty much all of the Level chapters are left intentionally blank. So I guess it's up to the player to figure out how to progress.
 
+After the first challenge, I am not sure I am going to like this wargame. Because there are no objectives given, I just have to randomly look for stuf
+
 ## Level 0
 
 ```bash
@@ -25,6 +27,10 @@ I tried to download it with `scp` to view the HTML file locally, but it didn't w
 So I key search `password` and find a link to "password for leviathan1", which gives me the password below. 
 
 And now that I think about it, I could have searched for the password locally using a tool like `grep` or a file reader with word search functionality. But I found the password anyways! And that's what matters.
+
+**Thoughts**
+
+I am having mixed feelings about this warzone challenge. It felt like I had to arbitrarily look for a random file, that happened to have the password hidden it. I was just lucky to stumble on the file and think to key search "password" in it, even though the file itself gives no indication to having a password in it. It makes the challenge feel like an unrealistic scenario, and it's more of a testament to me looking through random directories than learning about Unix itself.
 
 **Level 1 Password**
 

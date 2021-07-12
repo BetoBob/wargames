@@ -12,7 +12,9 @@ It also is optimal because it has less overhead than working in the Linux subsys
 
 Below is a good set of solutions explaining how to approach these problems:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/ff2Au8BIy_A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PLBf0hzazHTGOIn_vuuuCzRFVhYiDBnJID" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+Even if I find a solution, it might be good to look up solutions occasionally to see if there was a more intuitive way to approach my problem.
 
 ## Level 0
 
@@ -23,11 +25,13 @@ Below is a good set of solutions explaining how to approach these problems:
 ssh -p 2220 bandit0@bandit.labs.overthewire.org
 ```
 
+* solution used for this problem
+
 ## Level 0 -> Level 1
 
-* loging to a new user for each level:
+* logging to a new user for each level:
 
-```
+```bash
 ssh -p 2220 bandit1@bandit.labs.overthewire.org
 ```
 
@@ -160,7 +164,7 @@ cvX2JJa4CFALtqS87jk27qwqGhBM9plV
 
 * [why sort before uniq command](https://askubuntu.com/questions/536775/uniq-command-not-working-properly)
 
-```
+```bash
 bandit8@bandit:~$ sort data.txt | uniq -c | grep -F '1 '
       1 UsvVyFSfZZWbi6wgC7dAFyFuR6jQQUhR
 ```
@@ -312,4 +316,61 @@ Login with this command:
 ```bash
 ssh -i 14/sshkey.private -p 2220 bandit14@bandit.labs.overthewire.org
 ```
+
+* changing the `-p` flag to `30000` does not resolve this issue
+
+First, I need to find the password of the current server I am in. I currently only have the SSH key for the server I am in, not the actual password itself.
+
+I had to look up how to find the password for each level. Initially I thought I had to use a `sudo` command to check my user's password info. However in the README of the servers, it states that each game's password is stored in `/etc/bandit_pass`:
+
+```
+--[ Playing the games ]--
+
+  This machine might hold several wargames.
+  If you are playing "somegame", then:
+
+    * USERNAMES are somegame0, somegame1, ...
+    * Most LEVELS are stored in /somegame/.
+    * PASSWORDS for each level are stored in /etc/somegame_pass/.
+```
+
+```bash
+bandit14@bandit:~$ ls -l /etc/bandit_pass/
+total 136
+-r-------- 1 bandit0  bandit0   8 May  7  2020 bandit0
+-r-------- 1 bandit1  bandit1  33 May  7  2020 bandit1
+-r-------- 1 bandit10 bandit10 33 May  7  2020 bandit10
+-r-------- 1 bandit11 bandit11 33 May  7  2020 bandit11
+-r-------- 1 bandit12 bandit12 33 May  7  2020 bandit12
+-r-------- 1 bandit13 bandit13 33 May  7  2020 bandit13
+-r-------- 1 bandit14 bandit14 33 May  7  2020 bandit14
+-r-------- 1 bandit15 bandit15 33 May  7  2020 bandit15
+...
+```
+
+```bash
+bandit14@bandit:~$ cat /etc/bandit_pass/bandit14
+4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e
+```
+
+So now that I have that password, I just need to submit it to 30000 from the localhost of `bandit14`:
+
+```bash
+bandit14@bandit:~$ nc localhost 30000
+4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e
+Correct!
+BfMYroe26WYalil77FoDi9qh59eK5xNr
+```
+
+The tool [`nc` (short for `netcat`)](https://en.wikipedia.org/wiki/Netcat) is used to read and write to network ports using TCP or UDP. The command literally just opens up the localhost 30000 for listening, then you send the password through standard input. This will definitely be a tool I will want to learn in the future. As [Wikipedia](https://en.wikipedia.org/wiki/Netcat) says:
+
+> **netcat** (often abbreviated to **nc**) is a computer networking utility for reading from and writing to network connections using [TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) or [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol). The [command](https://en.wikipedia.org/wiki/Command_(computing)) is designed to be a dependable [back-end](https://en.wikipedia.org/wiki/Front_and_back_ends) that can be used directly or easily driven by other programs and  scripts. At the same time, it is a feature-rich network debugging and  investigation tool, since it can produce almost any kind of connection  its user could need and has a number of built-in capabilities.
+>
+> Its list of features includes port scanning, transferring files, and port listening: as with any server, it can be used as a [backdoor](https://en.wikipedia.org/wiki/Backdoor_(computing)).
+
+* I had to look up the solution for this challenge
+
+## Level 15 -> Level 16
+
+
 
