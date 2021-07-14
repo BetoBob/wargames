@@ -370,7 +370,101 @@ The tool [`nc` (short for `netcat`)](https://en.wikipedia.org/wiki/Netcat) is us
 
 * I had to look up the solution for this challenge
 
-## Level 15 -> Level 16
+## [Level 15 -> Level 16](https://overthewire.org/wargames/bandit/bandit16.html)
 
+Because this seemed a lot like the previous question, I looked up how to use `nc` with SSL encryption.
 
+I found a [StackExchange post](https://serverfault.com/questions/476068/can-netcat-talk-to-an-encrypted-port) about using `nc` to access a port with SSL, and they recommended to use `openssl` instead. So I configured the command in the StackExchange post to use `localhost` on port `30001`, and got the solution I was looking for:
+
+```bash
+bandit15@bandit:~$ openssl s_client -connect localhost:30001
+CONNECTED(00000003)
+depth=0 CN = localhost
+verify error:num=18:self signed certificate
+verify return:1
+depth=0 CN = localhost
+verify return:1
+---
+Certificate chain
+ 0 s:/CN=localhost
+   i:/CN=localhost
+---
+Server certificate
+-----BEGIN CERTIFICATE-----
+MIICBjCCAW+gAwIBAgIEfftLGTANBgkqhkiG9w0BAQUFADAUMRIwEAYDVQQDDAls
+b2NhbGhvc3QwHhcNMjEwNDEzMDgzODA3WhcNMjIwNDEzMDgzODA3WjAUMRIwEAYD
+VQQDDAlsb2NhbGhvc3QwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMLfXBVa
+jVKDHlA3U+S0hBMJMJlfue3xKECpmx1Ajp4/khUuWwvPB7+wLjqasBO2WfFYJzcq
+z9t7FfAPIlYjgvOTQs5X4vQ1aGzanvnNn+1VknpOnFAJQBSFq6ZD3ipWrhwm9XZq
+8CgFhTGp9IPthZp8Y0B7OgobhlMtXD/zLaTbAgMBAAGjZTBjMBQGA1UdEQQNMAuC
+CWxvY2FsaG9zdDBLBglghkgBhvhCAQ0EPhY8QXV0b21hdGljYWxseSBnZW5lcmF0
+ZWQgYnkgTmNhdC4gU2VlIGh0dHBzOi8vbm1hcC5vcmcvbmNhdC8uMA0GCSqGSIb3
+DQEBBQUAA4GBAMFH9rsZovwnb5k71/MpyCnXEwGlIhixUu6qfi1kiFvhJ6lJCvaO
+weOYxV4oJy1OEB0LSEAQOnSPfzC8dDasijFcdVhuIGGPuQ2GZ05nCiiIZUNnrMRB
+0z2RuRxgxMVjOvcSIJyvwyjVH4jY4I434fMyldePLxO1POLd1cxoKNTO
+-----END CERTIFICATE-----
+subject=/CN=localhost
+issuer=/CN=localhost
+---
+No client certificate CA names sent
+Peer signing digest: SHA512
+Server Temp Key: X25519, 253 bits
+---
+SSL handshake has read 1019 bytes and written 269 bytes
+Verification error: self signed certificate
+---
+New, TLSv1.2, Cipher is ECDHE-RSA-AES256-GCM-SHA384
+Server public key is 1024 bit
+Secure Renegotiation IS supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+SSL-Session:
+    Protocol  : TLSv1.2
+    Cipher    : ECDHE-RSA-AES256-GCM-SHA384
+    Session-ID: FF036EB2E84C3E2FFC3144D0CC91E196CB37ECC7946B61F0371B0AE7F4912B65
+    Session-ID-ctx:
+    Master-Key: 3069616FB2173090851F17C9FBCFCF350728DC320908E6D18043D72400ECEAC83015CD83C10E6E2BA7B055A9F73F2297
+    PSK identity: None
+    PSK identity hint: None
+    SRP username: None
+    TLS session ticket lifetime hint: 7200 (seconds)
+    TLS session ticket:
+    0000 - f2 5b 83 7e f0 ca 58 ca-aa f3 8f 83 b9 65 d5 23   .[.~..X......e.#
+    0010 - dc 45 65 70 d3 a6 e4 19-23 34 4f 84 8a d0 13 0b   .Eep....#4O.....
+    0020 - 57 70 4b 9c 82 7c 45 ad-e7 c7 71 60 9b 90 45 25   WpK..|E...q`..E%
+    0030 - fc 94 9e 1d 47 9a 97 43-01 4a b1 5f 61 92 fe de   ....G..C.J._a...
+    0040 - 54 83 5c 95 10 08 64 1b-3c 7e 15 93 63 0e b2 bf   T.\...d.<~..c...
+    0050 - ee a9 ab eb 86 01 89 38-91 6d 86 de 07 6e 6f 9f   .......8.m...no.
+    0060 - a6 4b 42 3a e1 4f f6 96-3f 90 ca c6 d0 d7 6a a8   .KB:.O..?.....j.
+    0070 - 97 a1 b9 5e ac 16 0f 1a-1f f1 0e af f9 03 96 7a   ...^...........z
+    0080 - b4 ea 23 69 10 00 0f d2-27 6c ea 9f 45 9f 2a 1f   ..#i....'l..E.*.
+    0090 - 35 d9 4e 2c b8 6d 06 7d-14 6b 0f 60 e4 00 f7 22   5.N,.m.}.k.`..."
+
+    Start Time: 1626221773
+    Timeout   : 7200 (sec)
+    Verify return code: 18 (self signed certificate)
+    Extended master secret: yes
+---
+BfMYroe26WYalil77FoDi9qh59eK5xNr
+Correct!
+cluFn7wTiGryunymYOu4RcffSxQluehd
+
+closed
+```
+
+A brief description of OpenSSL from the man pages:
+
+> OpenSSL is a cryptography toolkit implementing the Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) network protocols and related cryptography standards required by them. The openssl program is a command line tool for using the various cryptography functions of OpenSSL's crypto library from the shell.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/rROgWTfA5qE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+According to the video above, SSL is what makes the 's' in `https` secure. `https` is secure in two ways:
+
+1. data encryption, so only the client and server share information (no intercepted data); this encryption method is **SSL**
+2. certificates, issued by a certificate authority to verify if a website is what it claims to be
+   * these certificates can be verified by several different authorities (ex: Google Trust Services LLC,  [Let's Encrypt](https://letsencrypt.org/) (a TLS certificate nonprofit), Cloudflare)
+     * typically big tech companies like Google, Microsoft, Apple have their own certification services for their websites
+
+## Level 16 -> Level 17
 
