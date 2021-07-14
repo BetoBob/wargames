@@ -453,11 +453,17 @@ cluFn7wTiGryunymYOu4RcffSxQluehd
 closed
 ```
 
+My solution works great! But as a follow-up I decided to see what other people did for solutions, and it turns out `ncat` does have an `--ssl` flag that can be used. This was what was used in [HackerSploit's walkthrough](https://youtu.be/q1c8yiMu_24).
+
+### SSL Explanation
+
 A brief description of OpenSSL from the man pages:
 
 > OpenSSL is a cryptography toolkit implementing the Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) network protocols and related cryptography standards required by them. The openssl program is a command line tool for using the various cryptography functions of OpenSSL's crypto library from the shell.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/rROgWTfA5qE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
 
 According to the video above, SSL is what makes the 's' in `https` secure. `https` is secure in two ways:
 
@@ -466,5 +472,91 @@ According to the video above, SSL is what makes the 's' in `https` secure. `http
    * these certificates can be verified by several different authorities (ex: Google Trust Services LLC,  [Let's Encrypt](https://letsencrypt.org/) (a TLS certificate nonprofit), Cloudflare)
      * typically big tech companies like Google, Microsoft, Apple have their own certification services for their websites
 
-## Level 16 -> Level 17
+**Password for Level 16**
 
+```
+cluFn7wTiGryunymYOu4RcffSxQluehd
+```
+
+## [Level 16 -> Level 17](https://overthewire.org/wargames/bandit/bandit17.html)
+
+> The credentials for the next level can be retrieved by submitting the password of the current level to **a port on localhost in the range 31000 to 32000**. First find out which of these ports have a server listening on them. 
+
+```bash
+cat /usr/share/nmap/nmap-services | grep "\W31.*/"
+```
+
+Running the command above will give you a description of all ports from `31000` to `32000`, excluding `32000` because my regular expression is too lazy to include it. This is still a bit too much information. I could remove the ports that are listed as "unknown" , but there are still a lot of used ports to explore. This was still helpful to get an idea of what some of the higher level ports are doing, and got the command idea from [this article](https://www.plesk.com/blog/various/open-ports-in-linux/).
+
+I think the next best thing to do is see all the servers running SSL encryption, and just select the one that is in the 31000 to 32000 range. After that, I will just use the same command as last time.
+
+I want to use `netstat` for this solution, because it's a common tool used in forums. However I don't think it's compatible on this server. Here's what happens when I run a command to see ports:
+
+```bash
+bandit16@bandit:~$ netstat -t -l -p
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+netstat: no support for `AF INET (tcp)' on this system.
+```
+
+Same thing happens with `udp`. Also, `netstat` is not listed as a command to use for this exercise.
+
+I am going to do something stupid. I am going to loop through all the ports with `openssl` and attempt to give it the password using a bash script:
+
+```bash
+for ((i = 1000 ; i <= 2000 ; i++)); do
+  echo cluFn7wTiGryunymYOu4RcffSxQluehd | openssl s_client -connect "localhost:3$i"
+done > /tmp/beto/results
+```
+
+When looking through the results, I saw some connections were established. However, none of the output appeared to show a 'Correct!' acknowledgement message. Because this is getting tricky, I am going to look at a walkthrough for guidance.
+
+### [HackerSploit Solution](https://youtu.be/q1c8yiMu_24)
+
+To check for ports used, [HackerSploit](https://youtu.be/q1c8yiMu_24) used the following `nmap` command:
+
+```
+bandit16@bandit:~$ nmap localhost -p 31000-32000
+
+Starting Nmap 7.40 ( https://nmap.org ) at 2021-07-14 23:50 CEST
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00023s latency).
+Not shown: 996 closed ports
+PORT      STATE SERVICE
+31046/tcp open  unknown
+31518/tcp open  unknown
+31691/tcp open  unknown
+31790/tcp open  unknown
+31960/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 0.10 seconds
+```
+
+Now I am test each of these ports using the following SSL command:
+
+```
+ openssl s_client -connect localhost:[port]
+```
+
+* `31046`: connects but closes
+* `31518`: just repeats the password given by the user
+* `31691`: connects but closes
+* `31790`: returns an RSA Key
+
+I copied that RSA key and am now using it for the next level. I am still not sure why the brute force method did not work. It appears some of the connections were made. Anyways, I hope through some other tutorials that I will learn more about port scanning in the future! This was a good first exposure to it, but I definitely want to get more familiar with `nmap` and `openssl`.
+
+## [Level 17 -> Level 18](https://overthewire.org/wargames/bandit/bandit18.html)
+
+This one is pretty chill:
+
+```bash
+bandit17@bandit:~$ diff passwords.old passwords.new
+42c42
+< w0Yfolrc5bwjS4qw5mq1nnQi6mF03bii
+---
+> kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd
+```
+
+## [Level 18 -> Level 19](https://overthewire.org/wargames/bandit/bandit19.html)
+
+* this will be an interesting one to work on
