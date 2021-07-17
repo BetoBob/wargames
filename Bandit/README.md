@@ -557,6 +557,65 @@ bandit17@bandit:~$ diff passwords.old passwords.new
 > kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd
 ```
 
+**Password for Level 18**
+
+```
+kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd
+```
+
 ## [Level 18 -> Level 19](https://overthewire.org/wargames/bandit/bandit19.html)
 
-* this will be an interesting one to work on
+* I looked up how to do commands immediately upon login
+* then looked at another post about `bash.rc` and an alternative is to start another shell up using `/bin/sh`
+
+```powershell
+ssh -p 2220 bandit18@bandit.labs.overthewire.org -t "/bin/sh"
+```
+
+At the end of the `.bashrc` file is this:
+
+```bash
+echo 'Byebye !'
+exit 0
+```
+
+**Password for Level 19**
+
+```
+IueksS7Ubh8G3DCwVzrTd8rAVOwq3M5x
+```
+
+## [Level 19 -> Level 20](https://overthewire.org/wargames/bandit/bandit20.html)
+
+* each bandit level password has it's access restricted to it's associated level
+
+```bash
+bandit19@bandit:~$ ls -l /etc/bandit_pass/bandit20
+-r-------- 1 bandit20 bandit20 33 May  7  2020 /etc/bandit_pass/bandit20
+bandit19@bandit:~$ cat /etc/bandit_pass/bandit20
+cat: /etc/bandit_pass/bandit20: Permission denied
+```
+
+* the `./bandi20-do` executable is a program that lets you act with permissions of user `bandit20`
+
+```bash
+bandit19@bandit:~$ ./bandit20-do
+Run a command as another user.
+  Example: ./bandit20-do id
+```
+
+```bash
+bandit19@bandit:~$ ./bandit20-do cat /etc/bandit_pass/bandit20
+GbKksEFF4yrVs6il55v6gwY5aVje5f0j
+```
+
+* never actually had to use `setuid` for this level; my guess is that it was part of the program provided in the executable
+
+**Password for Level 20**
+
+```
+GbKksEFF4yrVs6il55v6gwY5aVje5f0j
+```
+
+## [Level 20 -> Level 21](https://overthewire.org/wargames/bandit/bandit21.html)
+
