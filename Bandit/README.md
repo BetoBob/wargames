@@ -619,3 +619,31 @@ GbKksEFF4yrVs6il55v6gwY5aVje5f0j
 
 ## [Level 20 -> Level 21](https://overthewire.org/wargames/bandit/bandit21.html)
 
+The wording on this one was kind of confusing. Basically what I had to do was:
+
+1. Open a free port an send the text of the password to it
+
+```bash
+bandit20@bandit:~$ echo "GbKksEFF4yrVs6il55v6gwY5aVje5f0j" | nc -l -p 1234
+```
+
+I chose `1234` because [HackerSploit](https://youtu.be/uFxs3wzgDGU) recognized that it was a common available port. So I did receive quite a bit of help to figure this one out, but attempted to write my own command. I also found out how to use `netcat` for this task using this [StackExchange post](https://askubuntu.com/questions/443227/sending-a-simple-tcp-message-using-netcat).
+
+2. In another shell, use the `./suconnect` command to connect to the port you sent the password to
+
+```bash
+bandit20@bandit:~$ ./suconnect 1234
+Read: GbKksEFF4yrVs6il55v6gwY5aVje5f0j
+Password matches, sending next password
+```
+
+3. The `./suconnect` will confirm it received the password, and send the next password to the open port (the first shell created) and close the connection.
+
+**Password for Level 21**
+
+```
+gE269g2h3mw3pwgrj0Ha9Uoqen1c9DGr
+```
+
+## [Level 21 -> Level 22](https://overthewire.org/wargames/bandit/bandit22.html)
+
