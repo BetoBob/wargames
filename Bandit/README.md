@@ -647,3 +647,66 @@ gE269g2h3mw3pwgrj0Ha9Uoqen1c9DGr
 
 ## [Level 21 -> Level 22](https://overthewire.org/wargames/bandit/bandit22.html)
 
+```bash
+bandit21@bandit:~$ ls /etc/cron.d
+cronjob_bandit15_root  cronjob_bandit22  cronjob_bandit24
+cronjob_bandit17_root  cronjob_bandit23  cronjob_bandit25_root
+bandit21@bandit:~$ cat /etc/cron.d/cronjob_bandit22
+@reboot bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+* * * * * bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+bandit21@bandit:~$ cat /usr/bin/cronjob_bandit22.sh
+#!/bin/bash
+chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+bandit21@bandit:~$ cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI
+```
+
+**Password for Level 22**
+
+```
+Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI
+```
+
+## [Level 22 -> Level 23](https://overthewire.org/wargames/bandit/bandit23.html)
+
+```bash
+bandit22@bandit:~$ ls /etc/cron.d
+cronjob_bandit15_root  cronjob_bandit22  cronjob_bandit24
+cronjob_bandit17_root  cronjob_bandit23  cronjob_bandit25_root
+bandit22@bandit:~$ cat /etc/cron.d/cronjob_bandit23
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+bandit22@bandit:~$ cat /usr/bin/cronjob_bandit23.sh
+#!/bin/bash
+
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+```
+
+**Goal:** run that target bash command to get the tmp folder name
+
+```bash
+mytarget=$(echo I am user bandit22 | md5sum | cut -d ' ' -f 1)
+```
+
+```bash
+bandit22@bandit:~$ mytarget=$(echo I am user bandit22 | md5sum | cut -d ' ' -f 1)
+bandit22@bandit:~$ $mytarget
+-bash: 8169b67bd894ddbb4412f91573b38db3: command not found
+bandit22@bandit:~$ cat /tmp/$mytarget
+Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI
+```
+
+**Password for Level 23**
+
+```
+Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI
+```
+
+## [Level 23 - > Level 24](https://overthewire.org/wargames/bandit/bandit24.html)
+
