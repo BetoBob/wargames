@@ -8,6 +8,7 @@ These exercises are a great way to keep up my skills in `bash` and various `Unix
 
 | Wargame                                                  | Current Level        |
 | -------------------------------------------------------- | -------------------- |
-| Bandit                                                   | Level 21 (out of 34) |
+| Bandit                                                   | Level 23 (out of 34) |
 | [Krypton](https://overthewire.org/wargames/krypton/)     | Level 1 (out of 7)   |
 | [Leviathan](https://overthewire.org/wargames/leviathan/) | Level 1 (out of 7)   |
+

