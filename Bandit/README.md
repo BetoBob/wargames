@@ -1051,3 +1051,68 @@ bandit30@bandit:/tmp/betobob/repo$ git show secret
 47e603bb428404d265f59c42920d81e5
 ```
 
+## [Level 31 -> Level 32](https://overthewire.org/wargames/bandit/bandit32.html)
+
+```bash
+bandit31@bandit:/tmp/beto/repo$ cat README.md
+This time your task is to push a file to the remote repository.
+
+Details:
+    File name: key.txt
+    Content: 'May I come in?'
+    Branch: master
+```
+
+* make the `key.txt` file as described
+* have to remove `*.txt` from the `.gitignore` file
+
+```bash
+bandit31@bandit:/tmp/beto/repo$ git push
+Could not create directory '/home/bandit31/.ssh'.
+The authenticity of host 'localhost (127.0.0.1)' can't be established.
+ECDSA key fingerprint is SHA256:98UL0ZWr85496EtCRkKlo20X3OPnyPSB5tB5RPbhczc.
+Are you sure you want to continue connecting (yes/no)? yes
+Failed to add the host to the list of known hosts (/home/bandit31/.ssh/known_hosts).
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+bandit31-git@localhost's password:
+Counting objects: 6, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (6/6), 491 bytes | 0 bytes/s, done.
+Total 6 (delta 1), reused 0 (delta 0)
+remote: ### Attempting to validate files... ####
+remote:
+remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+remote:
+remote: Well done! Here is the password for the next level:
+remote: 56a9bf19c63d650ce78e6ec0354ee45e
+remote:
+remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+remote:
+To ssh://localhost/home/bandit31-git/repo
+ ! [remote rejected] master -> master (pre-receive hook declined)
+error: failed to push some refs to 'ssh://bandit31-git@localhost/home/bandit31-git/repo'
+```
+
+**Level 32 Password**
+
+```
+56a9bf19c63d650ce78e6ec0354ee45e
+```
+
+## [Level 32 -> Level 33](https://overthewire.org/wargames/bandit/bandit33.html)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/8KFjql050gI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+* there is an exploit using positional parameters
+* basically, the first parameter (`sh`) can be run using `$0` because it's the first parameter, changing it to a default shell
+  * you can take stuff a step further by typing `bash` after to have the traditional `bash` shell
+
+* also didn't realize that I ended up in Level 33, I thought I was on the Level 32 server lol
+
+```bash
+bandit33@bandit:~$ cat /etc/bandit_pass/bandit33
+c9c3199ddf4121b10cf581a98d51caee
+```
+
