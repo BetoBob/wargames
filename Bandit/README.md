@@ -931,3 +931,123 @@ Going forward, I don't mind looking up solutions as long as I:
 
 ## [Level 27 -> Level 28](https://overthewire.org/wargames/bandit/bandit28.html)
 
+```bash
+bandit27@bandit:/tmp/beto$ git clone "ssh://bandit27-git@localhost/home/bandit27-git/repo"
+bandit27@bandit:/tmp/beto$ cd repo
+bandit27@bandit:/tmp/beto/repo$ ls
+README
+bandit27@bandit:/tmp/beto/repo$ cat README
+The password to the next level is: 0ef186ac70e04ea33b4c1853d2526fa2
+```
+
+## [Level 28 - > Level 29](https://overthewire.org/wargames/bandit/bandit29.html)
+
+```bash
+bandit28@bandit:/tmp/beto2/repo$ cat README.md
+# Bandit Notes
+Some notes for level29 of bandit.
+
+## credentials
+
+- username: bandit29
+- password: xxxxxxxxxx
+
+```
+
+* the password is 10 characters long? 
+* or maybe it literally is `xxxxxxxxxx` lol (not the case)
+
+* maybe the password is stored in an earlier version
+
+```bash
+bandit28@bandit:/tmp/beto2/repo$ git log -1
+commit edd935d60906b33f0619605abd1689808ccdd5ee
+Author: Morla Porla <morla@overthewire.org>
+Date:   Thu May 7 20:14:49 2020 +0200
+
+    fix info leak
+```
+
+```bash
+bandit28@bandit:/tmp/beto2/repo$ git log
+commit edd935d60906b33f0619605abd1689808ccdd5ee
+Author: Morla Porla <morla@overthewire.org>
+Date:   Thu May 7 20:14:49 2020 +0200
+
+    fix info leak
+
+commit c086d11a00c0648d095d04c089786efef5e01264
+Author: Morla Porla <morla@overthewire.org>
+Date:   Thu May 7 20:14:49 2020 +0200
+
+    add missing data
+
+commit de2ebe2d5fd1598cd547f4d56247e053be3fdc38
+Author: Ben Dover <noone@overthewire.org>
+Date:   Thu May 7 20:14:49 2020 +0200
+
+    initial commit of README.md
+```
+
+```bash
+bandit28@bandit:/tmp/beto2/repo$ git checkout -b c086d11a00c0648d095d04c089786efef5e01264
+Switched to a new branch 'c086d11a00c0648d095d04c089786efef5e01264'
+bandit28@bandit:/tmp/beto2/repo$ ls
+README.md
+bandit28@bandit:/tmp/beto2/repo$ cat README.md
+# Bandit Notes
+Some notes for level29 of bandit.
+
+## credentials
+
+- username: bandit29
+- password: bbc96594b4e001778eee9975372716b2
+```
+
+## [Level 29 -> Level 30](https://overthewire.org/wargames/bandit/bandit30.html)
+
+```bash
+bandit29@bandit:/tmp/beto4/repo$ cat README.md
+# Bandit Notes
+Some notes for bandit30 of bandit.
+
+## credentials
+
+- username: bandit30
+- password: <no passwords in production!>
+```
+
+I am looking at various branch types for this one: https://www.nobledesktop.com/learn/git/git-branches
+
+```bash
+bandit29@bandit:/tmp/beto4/repo$ git branch -r
+  origin/HEAD -> origin/master
+  origin/dev
+  origin/master
+  origin/sploits-dev
+```
+
+```bash
+bandit29@bandit:/tmp/beto4/repo$ git checkout -b origin/dev
+Switched to a new branch 'origin/dev'
+bandit29@bandit:/tmp/beto4/repo$ cat README.md
+# Bandit Notes
+Some notes for bandit30 of bandit.
+
+## credentials
+
+- username: bandit30
+- password: 5b90576bedb2cc04c86a9e924ce42faf
+```
+
+## [Level 30 -> Level 31](https://overthewire.org/wargames/bandit/bandit31.html)
+
+Basically it's hidden in an obscure `git` feature called "tags". Not quite as fun of a challenge because it literally could be hidden in any random `git` feature.
+
+```bash
+bandit30@bandit:/tmp/betobob/repo$ git tag
+secret
+bandit30@bandit:/tmp/betobob/repo$ git show secret
+47e603bb428404d265f59c42920d81e5
+```
+
